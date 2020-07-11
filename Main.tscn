@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Hero/Hero.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Main.gd" type="Script" id=2]
+[ext_resource path="res://Art/Sprites/Gun_Placeholder.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 31.5503, 41.7778 )
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Hero" parent="." instance=ExtResource( 1 )]
+position = Vector2( 427, 243 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2( 671, 278 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="StaticBody2D"]
+scale = Vector2( 5, 10 )
+texture = ExtResource( 3 )
+
+[editable path="Hero"]
