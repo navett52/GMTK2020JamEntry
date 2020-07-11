@@ -1,8 +1,9 @@
 extends KinematicBody2D
 
 onready var player = get_parent().get_node("Hero")
-var speed = 175
+export var speed = 175
 var velocity = Vector2()
+var states = ["dash", "AOE", "shoot"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,6 +30,15 @@ func _physics_process(delta):
 	#normalizes the velocity vector, and then sets it to the declared speed
 	velocity = velocity.normalized() * speed
 	move_and_slide(velocity)
+
+func dash():
+	pass
+
+func AOE():
+	pass
+
+func shoot():
+	pass
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
