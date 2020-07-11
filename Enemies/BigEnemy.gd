@@ -2,17 +2,24 @@ extends KinematicBody2D
 
 onready var player = get_parent().get_node("Hero")
 export var speed = 175
+export var dash_speed = 500
 var velocity = Vector2()
+var d_velocity = Vector2()
 var states = ["dash", "AOE", "shoot"]
+var state = "dash"
+var waiting = false
+var dashing = false
+var timer = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
 
 func _process(delta):
+	print(distance_to_object(player))
 	#if the player is in line of sight
-	if(is_in_line_of_sight(player)):
-		#add the direction of the player to enemy velocity
+	if(is_in_line_of_sight(player) && distance_to_object(player) <= 400):
+		
 		if player.position.x > position.x:
 			velocity.x += speed
 		if player.position.x < position.x:
@@ -27,18 +34,38 @@ func _process(delta):
 		velocity.y = 0
 
 func _physics_process(delta):
-	#normalizes the velocity vector, and then sets it to the declared speed
-	velocity = velocity.normalized() * speed
-	move_and_slide(velocity)
+	if(state == "dash" && distance_to_object(player) <= 200 && !waiting):
+		d_velocity = (player.get_position()-self.get_position()).normalized() * dash_speed
+		waiting = true
+		wait(3)
+	elif(!waiting):
+		#normalizes the velocity vector, and then sets it to the declared speed
+		velocity = velocity.normalized() * speed
+		move_and_slide(velocity)
+	elif(waiting && dashing):
+		if(timer < 20):
+			timer += 1
+			move_and_slide(d_velocity)
+		else:
+			waiting = false
+			dashing = false
+			timer = 0
 
 func dash():
-	pass
+	dashing = true
 
 func AOE():
 	pass
 
 func shoot():
 	pass
+
+func distance_to_object(thing):
+	if thing != null: 
+		#return sqrt(abs((int(self.get_position().x - thing.get_position().x)^2) + (int(self.get_position().y - thing.get_position().y)^2)))
+		return self.get_global_transform().get_origin().distance_to(thing.get_global_transform().get_origin())
+func wait(time):
+	get_tree().create_timer(time).connect("timeout", self, "dash")
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
