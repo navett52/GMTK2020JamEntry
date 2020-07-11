@@ -10,14 +10,15 @@ var normal_dir = Vector2(0,1)
 var velocity = Vector2()
 var d_velocity = Vector2()
 var states = ["dash", "AOE", "shoot"]
-var state = "shoot"
+var state
 var waiting = false
 var dashing = false
 var timer = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	randomize()
+	select_state()
 
 func _process(delta):
 	#print(distance_to_object(player))
@@ -41,7 +42,7 @@ func _physics_process(delta):
 	if(state == "dash" && distance_to_object(player) <= 200 && !waiting && is_in_line_of_sight(player)):
 		d_velocity = (player.get_position()-self.get_position()).normalized() * dash_speed
 		waiting = true
-		waitDash(3)
+		waitDash(1)
 	elif(state == "AOE" && distance_to_object(player) <= 100 && !waiting):
 		waiting = true
 		waitAOE(1)
@@ -69,7 +70,7 @@ func AOE():
 	get_tree().create_timer(0.5).connect("timeout", self, "hideSplo")
 	for i in get_node("Area2D").get_overlapping_bodies():
 		if(i.get_name() == "Hero"):
-			print("sploded")
+			speed = 175
 
 func showSplo():
 	get_node("splosion").visible = true
@@ -79,7 +80,6 @@ func hideSplo():
 	waiting = false
 
 func shoot():
-	print(get_aim_angle())
 	var clone = bullet.instance()
 	self.get_parent().add_child(clone)
 	clone.global_transform = self.global_transform
@@ -96,7 +96,6 @@ func shoot():
 		clone.global_position.y += 27
 	elif(0 < angle && angle < 45):
 		clone.global_position.y += 27
-
 
 	clone.initialize((player.get_position()-self.get_position()).normalized())
 	waiting = false
@@ -125,6 +124,11 @@ func waitAOE(time):
 
 func waitShoot(time):
 	get_tree().create_timer(time).connect("timeout", self, "shoot")
+
+func select_state():
+	state = states[randi()%3]
+	print(state)
+	get_tree().create_timer(5).connect("timeout", self, "select_state")
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
