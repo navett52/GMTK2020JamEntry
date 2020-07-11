@@ -17,3 +17,6 @@ texture = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Gun" parent="." instance=ExtResource( 3 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true

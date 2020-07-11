@@ -1,6 +1,6 @@
 extends Node2D
 
 
-# Called when the node enters the scene tree for the first time.
+# Register the main node to the Global Script G so we can add children to it easily.
 func _ready():
 	G.main_node = self
