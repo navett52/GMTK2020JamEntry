@@ -3,10 +3,14 @@ extends KinematicBody2D
 onready var player = get_parent().get_node("Hero")
 export var speed = 175
 export var dash_speed = 500
+
+var bullet = preload("res://Enemies/enemyProjectile.tscn")
+var normal_dir = Vector2(0,1)
+
 var velocity = Vector2()
 var d_velocity = Vector2()
 var states = ["dash", "AOE", "shoot"]
-var state = "AOE"
+var state = "shoot"
 var waiting = false
 var dashing = false
 var timer = 0
@@ -18,7 +22,7 @@ func _ready():
 func _process(delta):
 	#print(distance_to_object(player))
 	#if the player is in line of sight
-	if(is_in_line_of_sight(player) && distance_to_object(player) <= 400):
+	if(is_in_line_of_sight(player)):
 		
 		if player.position.x > position.x:
 			velocity.x += speed
@@ -34,13 +38,16 @@ func _process(delta):
 		velocity.y = 0
 
 func _physics_process(delta):
-	if(state == "dash" && distance_to_object(player) <= 200 && !waiting):
+	if(state == "dash" && distance_to_object(player) <= 200 && !waiting && is_in_line_of_sight(player)):
 		d_velocity = (player.get_position()-self.get_position()).normalized() * dash_speed
 		waiting = true
 		waitDash(3)
 	elif(state == "AOE" && distance_to_object(player) <= 100 && !waiting):
 		waiting = true
-		waitAOE(2)
+		waitAOE(1)
+	elif(state == "shoot" && distance_to_object(player) <= 300 && !waiting):
+		waiting = true
+		waitShoot(1)
 	elif(!waiting):
 		#normalizes the velocity vector, and then sets it to the declared speed
 		velocity = velocity.normalized() * speed
@@ -63,7 +70,6 @@ func AOE():
 	for i in get_node("Area2D").get_overlapping_bodies():
 		if(i.get_name() == "Hero"):
 			print("sploded")
-	pass
 
 func showSplo():
 	get_node("splosion").visible = true
@@ -73,18 +79,52 @@ func hideSplo():
 	waiting = false
 
 func shoot():
-	pass
+	print(get_aim_angle())
+	var clone = bullet.instance()
+	self.get_parent().add_child(clone)
+	clone.global_transform = self.global_transform
+	var angle = get_aim_angle()
+	if(45 <= angle && angle <= 135):
+		clone.global_position.x -= 27
+	elif(135 < angle && angle <= 180):
+		clone.global_position.y -= 27
+	elif(-180 < angle && angle < -135):
+		clone.global_position.y -= 27
+	elif(-135 <= angle && angle <= -45):
+		clone.global_position.x += 27
+	elif(-45 < angle && angle <= 0):
+		clone.global_position.y += 27
+	elif(0 < angle && angle < 45):
+		clone.global_position.y += 27
 
+
+	clone.initialize((player.get_position()-self.get_position()).normalized())
+	waiting = false
+
+func get_aim_angle():
+	var b = (player.get_position()-self.get_position()).normalized()
+	var a = normal_dir
+	
+	var dot = a.dot(b)
+	var angle = rad2deg(acos(dot))
+	if(self.get_position().x >= player.get_position().x):
+		return angle
+	else:
+		return -angle
+	
 func distance_to_object(thing):
 	if thing != null: 
 		#return sqrt(abs((int(self.get_position().x - thing.get_position().x)^2) + (int(self.get_position().y - thing.get_position().y)^2)))
-		return self.get_global_transform().get_origin().distance_to(thing.get_global_transform().get_origin())
+		return (self.get_global_transform().get_origin().distance_to(thing.get_global_transform().get_origin()))
 
 func waitDash(time):
 	get_tree().create_timer(time).connect("timeout", self, "dash")
 
 func waitAOE(time):
 	get_tree().create_timer(time).connect("timeout", self, "AOE")
+
+func waitShoot(time):
+	get_tree().create_timer(time).connect("timeout", self, "shoot")
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
