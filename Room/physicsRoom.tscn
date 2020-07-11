@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Objects/Physics.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Room/physicsRoom.gd" type="Script" id=2]
+[ext_resource path="res://Room/Room.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Hero/Hero.tscn" type="PackedScene" id=4]
+
+[node name="physicsRoom" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Room" parent="." instance=ExtResource( 3 )]
+position = Vector2( -0.334152, -1.05687 )
+
+[node name="Physics1" parent="." instance=ExtResource( 1 )]
+position = Vector2( 542.891, 173.027 )
+direction = 1
+
+[node name="Physics2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 177.789, 387.326 )
+direction = 1
+
+[node name="Physics3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 861.959, 374.627 )
+direction = -1
+
+[node name="Physics4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 290.494, 117.468 )
+direction = 1
+
+[node name="Physics5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 396.85, 96.8314 )
+direction = 1
+
+[node name="Physics6" parent="." instance=ExtResource( 1 )]
+position = Vector2( 652.422, 449.235 )
+direction = -1
+
+[node name="Physics7" parent="." instance=ExtResource( 1 )]
+position = Vector2( 414.312, 200.013 )
+direction = 1
+
+[node name="Physics8" parent="." instance=ExtResource( 1 )]
+position = Vector2( 334.942, 436.535 )
+direction = 1
+
+[node name="Physics9" parent="." instance=ExtResource( 1 )]
+position = Vector2( 884.182, 165.09 )
+direction = -1
+
+[node name="Hero" parent="." instance=ExtResource( 4 )]
+position = Vector2( 415.445, 354.75 )

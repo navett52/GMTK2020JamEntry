@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Room/shapeChanger.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://Hero/Hero.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Room/shapeRoom.gd" type="Script" id=4]
+
+[node name="shapeRoom" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Hero" parent="." instance=ExtResource( 3 )]
+position = Vector2( 549.805, 310.43 )
+
+[node name="shapeChanger" type="StaticBody2D" parent="."]
+script = ExtResource( 1 )
+ranges = 20
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="shapeChanger"]
+build_mode = 1
+polygon = PoolVector2Array( -4.95096, 0.902695, 0.0944214, 100.128, 0.0944214, 187.582, -4.95096, 283.444, -3.26917, 360.806, 1.77621, 428.078, 0.0944214, 498.713, 3.45801, 550.849, -3.26917, 606.348, 27.0031, 599.621, 69.0479, 599.621, 111.093, 604.666, 149.774, 604.666, 171.637, 606.348, 220.409, 608.03, 262.454, 604.666, 326.362, 608.03, 361.68, 604.666, 437.361, 597.939, 506.314, 608.03, 566.859, 604.666, 644.221, 601.303, 748.492, 604.666, 822.491, 602.984, 879.672, 609.712, 957.035, 609.712, 1025.99, 611.394, 1051.21, 608.03, 1039.44, 528.986, 1041.12, 471.805, 1046.17, 433.123, 1056.26, 352.397, 1051.21, 313.716, 1046.17, 273.353, 1047.85, 229.627, 1057.94, 182.536, 1057.94, 143.855, 1042.81, 103.492, 1046.17, 54.7201, 1046.17, 22.766, 1041.12, -5.82448, 990.67, -24.3242, 893.126, -32.7332, 862.854, -32.7332, 829.218, -24.3242, 785.492, -26.006, 740.083, -19.2788, 701.402, -15.9152, 625.721, -12.5517, 602.176, -15.9152, 502.951, -24.3242, 474.36, -24.3242, 417.179, -22.6424, 375.134, -19.2788, 297.772, -15.9152, 247.318, -26.006, 213.682, -17.597, 190.137, -5.82448, 136.32, -10.8699, 106.047, -22.6424, 77.4569, -5.82448, 32.0485, -15.9152, 16.9124, -9.18806 )
+
+[node name="Timer" type="Timer" parent="shapeChanger"]
+wait_time = 0.5
+autostart = true
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 52.3259, 281.428 )
+texture = ExtResource( 2 )
+[connection signal="timeout" from="shapeChanger/Timer" to="shapeChanger" method="_on_Timer_timeout"]
