@@ -19,19 +19,17 @@ func _ready():
 		damage = 1
 
 func _physics_process(delta):
-	print(type)
 	# Move the bullets, if they hit something kill them
 	# Some work to apply damage to enemies may need to go here
 	var collision = move_and_collide(velocity)
 	if (collision != null):
-		print("collision")
 		queue_free()
 		if(collision.collider.has_method("take_damage")):
 			print(damage)
 			collision.collider.take_damage(damage)
-			if(collision.collider.has_method("freeze") && type == "IceRifle"):
+			if(collision.collider.has_method("freeze") && "IceRifle" in type):
 				collision.collider.freeze()
-			elif(collision.collider.has_method("dot") && type == "FlameRifle"):
+			elif(collision.collider.has_method("dot") && "FlameRifle" in type):
 				collision.collider.dot()
 
 
