@@ -14,6 +14,7 @@ export (Vector2) var room_size = Vector2(42, 42)
 export (room_type) var type = room_type.NORMAL
 
 # Private variables
+var player
 var enemy_count = 0
 var rooms_completed = 0
 var tile_map = TileMap
@@ -25,14 +26,17 @@ onready var audio
 
 # Resources
 var tile_set = load("res://Art/Tileset/Walls.tres")
-var house = load("res://Room/Structures/House.tscn")
 var physics_object = load("res://Objects/Physics.tscn")
 
 var song1 = load("res://Songs/S-Sound 2.wav")
 var song2 = load("res://Songs/S-Sound3.wav")
 
+var SmallEnemy = load("res://Enemies/SmallEnemy.tscn")
+var BigEnemy = load("res://Enemies/BigEnemy.tscn")
+
 
 func _ready():
+	player = G.hero
 	# Randomize the seed
 	rand.randomize()
 	# Make sure to grab the default time step to not lose it
@@ -94,8 +98,8 @@ func generate_time_room():
 
 
 func time_behavior():
-	Engine.time_scale = rand.randf_range(0.0,3.0)
-	timer.wait_time = rand.randi_range(1,5)
+	Engine.time_scale = rand.randf_range(0.0, 3.0)
+	timer.wait_time = rand.randi_range(1, 5)
 
 
 # High level method to generate the room
@@ -112,8 +116,11 @@ func generate_room():
 	get_enemy_count()
 	if (rand.randf() < .5):
 		audio.stream = song1
+		audio.playing = true
 	else:
 		audio.stream = song2
+		audio.playing = true
+	player.global_position = Vector2(500, 500)
 
 
 # Outline the room with tiles so the player is constrained
@@ -152,22 +159,27 @@ func fill(x_step, y_step):
 		for y in range(1, room_size.y):
 			tile_map.set_cell(x, y, default_tile)
 	
-#	# Spawning enemies
-#	for x in range(room_size.x):
-#		for y in range(room_size.y):
-#			if (randf() < .003):
-#				var obstacle = house.instance()
-#				obstacle.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
-#				add_child(obstacle)
-#
-#			if (type == room_type.PHYSICS):
-#				if (randf() < .005):
-#					var object = physics_object.instance()
-#					object.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
-#					add_child(object)
-#
-#			y += y_step
-#		x += x_step
+	# Spawning enemies
+	for x in range(2, room_size.x - 2):
+		for y in range(2, room_size.y - 2):
+			if (randf() < .003):
+				var small = SmallEnemy.instance()
+				small.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+				get_parent().add_child(small)
+
+			if (randf() < .002):
+				var big = BigEnemy.instance()
+				big.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+				get_parent().add_child(big)
+			
+			if (type == room_type.PHYSICS):
+				if (randf() < .005):
+					var object = physics_object.instance()
+					object.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+					add_child(object)
+
+			y += y_step
+		x += x_step
 
 
 # Generate an outcrop from the wall

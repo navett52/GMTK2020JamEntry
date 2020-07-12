@@ -4,18 +4,20 @@ extends Node2D
 # How long the shotgun blast should live
 var life = 10
 
+var killed_everything = false
 
 func _ready():
 	# Kill the shotgun after a certain amount of time
 	get_node("AudioStreamPlayer2D").connect("finished", self, "dead")
 
 func _process(delta):
-	kill()
+	if !killed_everything:
+		kill()
 
 
 func kill():
 	var nodes = G.main_node.get_children()
-	
+	killed_everything = true
 	for i in nodes:
 		if(i.has_method("take_damage") && i.name != "Hero"):
 			i.take_damage(999)
