@@ -16,6 +16,7 @@ var waiting = false
 var dashing = false
 var frozen = false
 var timer = 0
+var anim = "down"
 signal died
 
 # Called when the node enters the scene tree for the first time.
@@ -29,35 +30,70 @@ func _process(delta):
 	if(is_in_line_of_sight(player)):
 		if player.position.x > position.x:
 			velocity.x += speed
+			anim = "left"
+			$Sprite.flip_h = true
 		if player.position.x < position.x:
 			velocity.x -= speed
+			anim = "left"
+			$Sprite.flip_h = false
 		if player.position.y > position.y:
 			velocity.y += speed
+			anim = "up"
+			$Sprite.flip_h = false
 		if player.position.y < position.y:
 			velocity.y -= speed
+			anim = "down"
+			$Sprite.flip_h = false
 	else:
 		# if can't see player, don't move
 		velocity.x = 0
 		velocity.y = 0
 
+
 func _physics_process(delta):
 	if(state == "dash" && distance_to_object(player) <= 200 && !waiting && is_in_line_of_sight(player)):
 		d_velocity = (player.get_position()-self.get_position()).normalized() * dash_speed
 		waiting = true
+		if(velocity.x && velocity.y == 0):
+			$Sprite.stop()
+		else:
+			$Sprite.play(anim)
+		
 		waitDash(1)
 	elif(state == "AOE" && distance_to_object(player) <= 100 && !waiting):
 		waiting = true
+		if(velocity.x && velocity.y == 0):
+			$Sprite.stop()
+		else:
+			$Sprite.play(anim)
+		
 		waitAOE(1)
 	elif(state == "shoot" && distance_to_object(player) <= 300 && !waiting):
 		waiting = true
+		if(velocity.x && velocity.y == 0):
+			$Sprite.stop()
+		else:
+			$Sprite.play(anim)
+		
 		waitShoot(1)
 	elif(!waiting):
 		# normalizes the velocity vector, and then sets it to the declared speed
 		velocity = velocity.normalized() * speed
+		if(velocity.x && velocity.y == 0):
+			$Sprite.stop()
+		else:
+			$Sprite.play(anim)
+		
 		move_and_slide(velocity)
 	elif(waiting && dashing):
 		if(timer < 30):
 			timer += 1
+		
+			if(velocity.x && velocity.y == 0):
+				$Sprite.stop()
+			else:
+				$Sprite.play(anim)
+		
 			move_and_slide(d_velocity)
 		else:
 			waiting = false

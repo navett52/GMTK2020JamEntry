@@ -5,6 +5,7 @@ export var speed = 175
 export var health = 50
 var velocity = Vector2()
 var waiting = false
+var anim
 signal died
 
 # Called when the node enters the scene tree for the first time.
@@ -13,8 +14,7 @@ func _ready():
 
 func _process(delta):
 	#if the player is in line of sight
-	if(is_in_line_of_sight(player) && !waiting):
-		#add the direction of the player to enemy velocity
+	if(is_in_line_of_sight(player)):
 		if player.position.x > position.x:
 			velocity.x += speed
 		if player.position.x < position.x:
@@ -24,7 +24,7 @@ func _process(delta):
 		if player.position.y < position.y:
 			velocity.y -= speed
 	else:
-		#if can't see player, don't move
+		# if can't see player, don't move
 		velocity.x = 0
 		velocity.y = 0
 
@@ -46,6 +46,11 @@ func dot_dmg():
 func _physics_process(delta):
 	#normalizes the velocity vector, and then sets it to the declared speed
 	velocity = velocity.normalized() * speed
+	if(velocity.x == 0 && velocity.y == 0):
+		$Sprite.stop()
+	else:
+		$Sprite.play()
+	
 	move_and_slide(velocity)
 	
 	for i in get_node("Area2D").get_overlapping_bodies():
