@@ -4,7 +4,7 @@ extends Node2D
 enum room_type {
 	PHYSICS,
 	TIME,
-	SHAPE,
+#	SHAPE,
 	NORMAL
 }
 
@@ -14,7 +14,7 @@ export (Vector2) var room_size = Vector2(42, 42)
 export (room_type) var type = room_type.NORMAL
 
 # Private variables
-var enemy_count = 0
+var enemy_count = 1
 var rooms_completed = 0
 var tile_map = TileMap
 var default_tile = 0
@@ -30,7 +30,7 @@ var physics_object = load("res://Objects/Physics.tscn")
 
 func _ready():
 	# Randomize the seed
-	randomize()
+	rand.randomize()
 	# Make sure to grab the default time step to not lose it
 	default_time_step = Engine.time_scale
 	# Generate the first room
@@ -39,8 +39,7 @@ func _ready():
 
 func _process(delta):
 	# If all enemies in the room have been defeated, we'll need to trigger loading a new room
-	# if (enemy_count <= 0):
-	if (Input.is_action_just_pressed("reload_room")):
+	if (enemy_count <= 0 or Input.is_action_just_pressed("reload_room")):
 		type = rand.randi_range(0, room_type.size() - 1)
 		Engine.time_scale = default_time_step
 		match(type):
@@ -50,17 +49,30 @@ func _process(delta):
 			room_type.TIME:
 				print("Time")
 				generate_time_room()
-			room_type.SHAPE:
-				print("Shape")
-				generate_shape_room()
+#			room_type.SHAPE:
+#				print("Shape")
+#				generate_shape_room()
 			room_type.NORMAL:
 				print("Normal")
 				generate_room()
+				tile_map.modulate = Color(251, 114, 4, 255)
+
+
+func get_enemy_count():
+	for child in get_parent().get_children():
+		if child.has_method("freeze"):
+			enemy_count += 1
+			child.connect("died", self, "update_enemy_count")
+
+
+func update_enemy_count():
+	enemy_count -= 1
 
 
 func generate_physics_room():
 	# The code for adding the physics objects lies in the fill() method
 	generate_room()
+	tile_map.modulate = Color(0, 0, 0, 255)
 
 
 func generate_time_room():
@@ -70,10 +82,11 @@ func generate_time_room():
 	timer.autostart = true
 	timer.connect("timeout", self, "time_behavior")
 	add_child(timer)
+	tile_map.modulate = Color(10, 95, 229, 255)
 
 
-func generate_shape_room():
-	generate_room()
+#func generate_shape_room():
+#	generate_room()
 
 
 func time_behavior():
@@ -92,6 +105,7 @@ func generate_room():
 	outline()
 	fill(5, 5)
 	tile_map.update_bitmask_region()
+	get_enemy_count()
 
 
 # Outline the room with tiles so the player is constrained

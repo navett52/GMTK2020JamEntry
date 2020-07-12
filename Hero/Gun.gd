@@ -31,12 +31,12 @@ var ammo_weights = {
 
 
 func _ready():
+	rand.randomize()
 	bullet_type = choose_ammo()
 	instance_bullet_with_count(bullet_type)
 
 
 func _process(delta):
-	randomize()
 	# Keep the gun pointed at the mouse for aiming
 	look_at(get_global_mouse_position())
 
@@ -96,8 +96,9 @@ func choose_ammo():
 	var ammo
 	for weight in ammo_weights:
 		sum_of_weight += ammo_weights[weight]
-
-	var random = rand.randi_range(1, sum_of_weight)
+	
+	var random = rand.randi_range(0, sum_of_weight)
+	print(random)
 
 	for weight in ammo_weights:
 		if random < ammo_weights[weight]:
