@@ -4,6 +4,8 @@ extends KinematicBody2D
 export (int) var speed = 250
 export (int) var health = 100
 
+onready var health_label = $HUD/Health
+
 # Private variables
 var direction = Vector2()
 var velocity = Vector2()
@@ -14,6 +16,7 @@ var gun = Node
 func _ready():
 	# Grab a reference to the gun
 	gun = get_node("Gun")
+	health_label.text = str(health)
 
 
 func _process(delta):
@@ -29,9 +32,9 @@ func _process(delta):
 func take_damage(damage):
 	if(!damage_taken):
 		health -= damage
+		health_label.text = str(health)
 		damage_taken = true
 		get_tree().create_timer(1).connect("timeout", self, "make_vulnerable")
-		print(health)
 		if(health <= 0):
 			get_tree().change_scene("res://Menu.tscn")
 
