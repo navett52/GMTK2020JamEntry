@@ -9,6 +9,16 @@ func _ready():
 	# Kill the shotgun after a certain amount of time
 	get_node("AudioStreamPlayer2D").connect("finished", self, "dead")
 
+func _process(delta):
+	kill()
+
+
+func kill():
+	var nodes = G.main_node.get_children()
+	
+	for i in nodes:
+		if(i is KinematicBody2D && i.name != "Hero"):
+			i.queue_free()
 
 # Passing the direction down to the projectiles
 func initialize(direction):

@@ -2,8 +2,10 @@ extends KinematicBody2D
 
 onready var player = get_parent().get_node("Hero")
 export var speed = 175
-export var health = 40
+export var health = 50
 var velocity = Vector2()
+var waiting = false
+signal died
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -11,7 +13,7 @@ func _ready():
 
 func _process(delta):
 	#if the player is in line of sight
-	if(is_in_line_of_sight(player)):
+	if(is_in_line_of_sight(player) && !waiting):
 		#add the direction of the player to enemy velocity
 		if player.position.x > position.x:
 			velocity.x += speed
@@ -26,6 +28,21 @@ func _process(delta):
 		velocity.x = 0
 		velocity.y = 0
 
+func freeze():
+	waiting = true
+	get_tree().create_timer(4).connect("timeout", self, "unfreeze")
+
+func unfreeze():
+	waiting = false
+
+func dot():
+	get_tree().create_timer(1).connect("timeout", self, "dot_dmg")
+	get_tree().create_timer(2).connect("timeout", self, "dot_dmg")
+	get_tree().create_timer(3).connect("timeout", self, "dot_dmg")
+
+func dot_dmg():
+	self.take_damage(6)
+
 func _physics_process(delta):
 	#normalizes the velocity vector, and then sets it to the declared speed
 	velocity = velocity.normalized() * speed
@@ -38,6 +55,7 @@ func _physics_process(delta):
 func take_damage(damage):
 	health -= damage
 	if(health <= 0):
+		emit_signal("died")
 		queue_free()
 
 #checks to see if our enemy has line of sight with the player
