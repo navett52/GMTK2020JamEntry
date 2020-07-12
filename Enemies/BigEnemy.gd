@@ -14,7 +14,9 @@ var states = ["dash", "AOE", "shoot"]
 var state
 var waiting = false
 var dashing = false
+var frozen = false
 var timer = 0
+signal died
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -84,25 +86,26 @@ func hideSplo():
 	waiting = false
 
 func shoot():
-	var clone = bullet.instance()
-	self.get_parent().add_child(clone)
-	clone.global_transform = self.global_transform
-	var angle = get_aim_angle()
-	if(45 <= angle && angle <= 135):
-		clone.global_position.x -= 27
-	elif(135 < angle && angle <= 180):
-		clone.global_position.y -= 27
-	elif(-180 < angle && angle < -135):
-		clone.global_position.y -= 27
-	elif(-135 <= angle && angle <= -45):
-		clone.global_position.x += 27
-	elif(-45 < angle && angle <= 0):
-		clone.global_position.y += 27
-	elif(0 < angle && angle < 45):
-		clone.global_position.y += 27
+	if(!frozen):
+		var clone = bullet.instance()
+		self.get_parent().add_child(clone)
+		clone.global_transform = self.global_transform
+		var angle = get_aim_angle()
+		if(45 <= angle && angle <= 135):
+			clone.global_position.x -= 27
+		elif(135 < angle && angle <= 180):
+			clone.global_position.y -= 27
+		elif(-180 < angle && angle < -135):
+			clone.global_position.y -= 27
+		elif(-135 <= angle && angle <= -45):
+			clone.global_position.x += 27
+		elif(-45 < angle && angle <= 0):
+			clone.global_position.y += 27
+		elif(0 < angle && angle < 45):
+			clone.global_position.y += 27
 
-	clone.initialize((player.get_position()-self.get_position()).normalized())
-	waiting = false
+		clone.initialize((player.get_position()-self.get_position()).normalized())
+		waiting = false
 
 func get_aim_angle():
 	var b = (player.get_position()-self.get_position()).normalized()
@@ -136,9 +139,27 @@ func select_state():
 
 func take_damage(damage):
 	health -= damage
-
-	if(health >= 0):
+	
+	if(health <= 0):
+		emit_signal("died")
 		queue_free()
+
+func freeze():
+	waiting = true
+	frozen = true
+	get_tree().create_timer(4).connect("timeout", self, "unfreeze")
+
+func unfreeze():
+	waiting = false
+	frozen = false
+
+func dot():
+	get_tree().create_timer(1).connect("timeout", self, "dot_dmg")
+	get_tree().create_timer(2).connect("timeout", self, "dot_dmg")
+	get_tree().create_timer(3).connect("timeout", self, "dot_dmg")
+
+func dot_dmg():
+	self.take_damage(20)
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
