@@ -1,11 +1,45 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Art/Sprites/Hero_Placeholder.png" type="Texture" id=1]
 [ext_resource path="res://Hero/Hero.gd" type="Script" id=2]
 [ext_resource path="res://Hero/Gun.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Hero/Gun2.gd" type="Script" id=4]
+[ext_resource path="res://Art/Sprites/Bullet_Placeholder.png" type="Texture" id=5]
+[ext_resource path="res://Hero/KinematicBody2D.gd" type="Script" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 16 )
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+render_mode blend_add;
+void fragment(){
+	COLOR=texture(SCREEN_TEXTURE,SCREEN_UV);
+	COLOR.r+=0.4;
+	COLOR.g=0.0;
+	COLOR.b=0.0;
+}
+"
+custom_defines = ""
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+flag_rotate_y = true
+flag_disable_z = true
+spread = 10.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 6.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 7.75847, 32.3963 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 14.7512, 15.7538 )
 
 [node name="Hero" type="KinematicBody2D"]
 script = ExtResource( 2 )
@@ -16,7 +50,47 @@ texture = ExtResource( 1 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="Gun" parent="." instance=ExtResource( 3 )]
+[node name="Gun1" parent="." instance=ExtResource( 3 )]
+enabled = false
+
+[node name="Gun2" type="Node2D" parent="."]
+script = ExtResource( 4 )
+enabled = true
+
+[node name="Particles2D" type="Particles2D" parent="Gun2"]
+material = SubResource( 3 )
+position = Vector2( 0.58757, -2.29077 )
+emitting = false
+amount = 100
+lifetime = 100.0
+speed_scale = 64.0
+local_coords = false
+process_material = SubResource( 4 )
+texture = ExtResource( 5 )
+
+[node name="Laser" type="RayCast2D" parent="Gun2"]
+enabled = true
+cast_to = Vector2( 1000, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Timer" type="Timer" parent="Gun2"]
+one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+position = Vector2( 38.2608, -3.78403 )
+shape = SubResource( 5 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 6 )
+[connection signal="timeout" from="Gun2/Timer" to="Gun2" method="_on_Timer_timeout"]

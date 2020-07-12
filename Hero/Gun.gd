@@ -1,21 +1,26 @@
 extends Node2D
-
+export var enabled=true
 var direction = Vector2()
 var Shotgun = load("res://Hero/Ammo/Shotgun.tscn")
-
-
+var active=true
 func _process(delta):
 	# Keep the gun pointed at the mouse for aiming
 	look_at(get_global_mouse_position())
 
-
 # Shoot the gun
 # Needs some work still to randomly assign the different types of ammo
 func shoot():
-	var mouse_direction = (get_global_mouse_position() - self.global_position).normalized()
-	var bullet = Shotgun.instance()
-	bullet.global_position = global_position
-	# Below is some weird math I had to do to get the bullets to spawn in the right direction
-	bullet.rotation = -atan2(mouse_direction.x, mouse_direction.y) + (PI/2)
-	bullet.initialize(mouse_direction)
-	G.main_node.add_child(bullet)
+	if enabled and active:
+		var mouse_direction = (get_global_mouse_position() - self.global_position).normalized()
+		var bullet = Shotgun.instance()
+		bullet.global_position = global_position
+		# Below is some weird math I had to do to get the bullets to spawn in the right direction
+		bullet.rotation = -atan2(mouse_direction.x, mouse_direction.y) + (PI/2)
+		bullet.initialize(mouse_direction)
+		G.main_node.add_child(bullet)
+		active=false
+	else:
+		if $Timer.is_stopped():
+			$Timer.start()
+func _on_Timer_timeout():
+	active=true
