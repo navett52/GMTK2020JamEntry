@@ -25,12 +25,12 @@ script = ExtResource( 2 )
 
 [node name="Projectile" parent="." instance=ExtResource( 1 )]
 modulate = Color( 0.00784314, 0.996078, 0.901961, 1 )
-position = Vector2( 40, 0 )
+position = Vector2( 15, 0 )
 
 [node name="Particles2D" type="Particles2D" parent="Projectile"]
 amount = 30
 lifetime = 3.0
-preprocess = 30.0
+preprocess = 5.0
 speed_scale = 5.0
 randomness = 0.15
 draw_order = 1

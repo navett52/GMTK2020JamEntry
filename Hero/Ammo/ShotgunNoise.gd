@@ -10,7 +10,7 @@ var rand = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize()
+	rand.randomize()
 	if (randf() < 0.5):
 		stream = sound1
 	else:

@@ -2,8 +2,8 @@ extends AudioStreamPlayer2D
 
 
 # Sounds
-var sound1 = load("res://Hero/Ammo/Sounds/S_flame rifle_1.wav")
-var sound2 = load("res://Hero/Ammo/Sounds/S_flame rifle_2.wav")
+var sound1 = load("res://Hero/Ammo/Sounds/S_flame rifle_1-1.wav")
+var sound2 = load("res://Hero/Ammo/Sounds/S_flame rifle_2-1.wav")
 
 var rand = RandomNumberGenerator.new()
 

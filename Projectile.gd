@@ -13,7 +13,7 @@ func _physics_process(delta):
 	if (collision != null):
 		if(collision.collider.has_method("take_damage")):
 			collision.collider.take_damage(40)
-			queue_free()
+		queue_free()
 
 
 # Uses the passed direction to create a proper velocity

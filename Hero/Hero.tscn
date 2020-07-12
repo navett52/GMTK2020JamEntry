@@ -5,7 +5,7 @@
 [ext_resource path="res://Hero/Gun.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 15.3281, 15.5996 )
+extents = Vector2( 8, 8 )
 
 [node name="Hero" type="KinematicBody2D"]
 collision_mask = 3
@@ -21,3 +21,4 @@ shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 0.5, 0.5 )

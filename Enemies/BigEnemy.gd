@@ -6,7 +6,7 @@ export var dash_speed = 500
 export var health = 100
 
 var bullet = preload("res://Enemies/enemyProjectile.tscn")
-var normal_dir = Vector2(0,1)
+var normal_dir = Vector2(0, 1)
 
 var velocity = Vector2()
 var d_velocity = Vector2()
@@ -22,10 +22,9 @@ func _ready():
 	select_state()
 
 func _process(delta):
-	#print(distance_to_object(player))
-	#if the player is in line of sight
+	# print(distance_to_object(player))
+	# if the player is in line of sight
 	if(is_in_line_of_sight(player)):
-		
 		if player.position.x > position.x:
 			velocity.x += speed
 		if player.position.x < position.x:
@@ -35,7 +34,7 @@ func _process(delta):
 		if player.position.y < position.y:
 			velocity.y -= speed
 	else:
-		#if can't see player, don't move
+		# if can't see player, don't move
 		velocity.x = 0
 		velocity.y = 0
 
@@ -51,7 +50,7 @@ func _physics_process(delta):
 		waiting = true
 		waitShoot(1)
 	elif(!waiting):
-		#normalizes the velocity vector, and then sets it to the declared speed
+		# normalizes the velocity vector, and then sets it to the declared speed
 		velocity = velocity.normalized() * speed
 		move_and_slide(velocity)
 	elif(waiting && dashing):
@@ -62,7 +61,7 @@ func _physics_process(delta):
 			waiting = false
 			dashing = false
 			timer = 0
-	
+
 	for i in get_node("Area2D2").get_overlapping_bodies():
 		if(i.get_name() == "Hero"):
 			i.take_damage(15)
@@ -108,17 +107,17 @@ func shoot():
 func get_aim_angle():
 	var b = (player.get_position()-self.get_position()).normalized()
 	var a = normal_dir
-	
+
 	var dot = a.dot(b)
 	var angle = rad2deg(acos(dot))
 	if(self.get_position().x >= player.get_position().x):
 		return angle
 	else:
 		return -angle
-	
+
 func distance_to_object(thing):
-	if thing != null: 
-		#return sqrt(abs((int(self.get_position().x - thing.get_position().x)^2) + (int(self.get_position().y - thing.get_position().y)^2)))
+	if thing != null:
+		# return sqrt(abs((int(self.get_position().x - thing.get_position().x)^2) + (int(self.get_position().y - thing.get_position().y)^2)))
 		return (self.get_global_transform().get_origin().distance_to(thing.get_global_transform().get_origin()))
 
 func waitDash(time):
@@ -137,7 +136,7 @@ func select_state():
 
 func take_damage(damage):
 	health -= damage
-	
+
 	if(health >= 0):
 		queue_free()
 
@@ -146,18 +145,17 @@ func take_damage(damage):
 func is_in_line_of_sight(thing):
 	var space = get_world_2d().direct_space_state
 	if thing != null:
-		
 		var parent = self.get_parent()
 		var nodes = parent.get_children()
 		var exclusions = [self]
-		
+
 		for i in nodes:
 			if i.has_method("is_in_line_of_sight"):
 				exclusions.append(i)
-		
-		var line_of_sight_obstacle = space.intersect_ray(global_position, 
+
+		var line_of_sight_obstacle = space.intersect_ray(global_position,
 				thing.global_position, exclusions, collision_mask)
-		
+
 		if line_of_sight_obstacle.collider == thing:
 			return true
 		else:
