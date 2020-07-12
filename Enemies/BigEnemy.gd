@@ -118,6 +118,7 @@ func _physics_process(delta):
 
 func dash():
 	dashing = true
+	$Dash.play()
 
 func AOE():
 	showSplo()
@@ -128,6 +129,7 @@ func AOE():
 
 func showSplo():
 	get_node("splosion").visible = true
+	$AOE.play()
 
 func hideSplo():
 	get_node("splosion").visible = false
@@ -151,7 +153,8 @@ func shoot():
 			clone.global_position.y += 27
 		elif(0 < angle && angle < 45):
 			clone.global_position.y += 27
-
+		
+		$Shoot.play()
 		clone.initialize((player.get_position()-self.get_position()).normalized())
 		waiting = false
 

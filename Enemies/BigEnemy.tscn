@@ -1,8 +1,11 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Art/Sprites/pig.png" type="Texture" id=1]
 [ext_resource path="res://Enemies/BigEnemy.gd" type="Script" id=2]
 [ext_resource path="res://Art/Sprites/AOE_placeholder.png" type="Texture" id=3]
+[ext_resource path="res://Enemies/Sounds/S_fire_ball.wav" type="AudioStream" id=4]
+[ext_resource path="res://Enemies/Sounds/S_super attack of the enemy(dashing whoosh)_2.wav" type="AudioStream" id=5]
+[ext_resource path="res://Enemies/Sounds/S_Small_Explosion.wav" type="AudioStream" id=6]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -93,3 +96,12 @@ shape = SubResource( 9 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
 position = Vector2( 0.539597, 0.671879 )
 shape = SubResource( 10 )
+
+[node name="Dash" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[node name="AOE" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+
+[node name="Shoot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
