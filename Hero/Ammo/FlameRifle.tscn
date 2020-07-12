@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Projectile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Hero/Ammo/FlameRifle.gd" type="Script" id=2]
-[ext_resource path="res://Hero/Ammo/Sounds/S_flame rifle_1.wav" type="AudioStream" id=3]
+[ext_resource path="res://Hero/Ammo/Sounds/S_flame rifle_1-1.wav" type="AudioStream" id=3]
 [ext_resource path="res://Hero/Ammo/FlameRifleSound.gd" type="Script" id=4]
 
 [sub_resource type="ParticlesMaterial" id=1]
@@ -25,12 +25,12 @@ script = ExtResource( 2 )
 
 [node name="Projectile" parent="." instance=ExtResource( 1 )]
 modulate = Color( 0.992157, 0.0117647, 0.0117647, 1 )
-position = Vector2( 40, 0 )
+position = Vector2( 15, 0 )
 
 [node name="Particles2D" type="Particles2D" parent="Projectile"]
 amount = 30
 lifetime = 3.0
-preprocess = 30.0
+preprocess = 5.0
 speed_scale = 5.0
 randomness = 0.15
 draw_order = 1

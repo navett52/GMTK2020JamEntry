@@ -6,6 +6,7 @@
 [ext_resource path="res://Room/Room.tscn" type="PackedScene" id=4]
 
 [node name="Main" type="Node2D"]
+z_index = -1
 script = ExtResource( 2 )
 
 [node name="SmallEnemy" parent="." instance=ExtResource( 3 )]

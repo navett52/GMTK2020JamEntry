@@ -6,9 +6,9 @@ var life = .5
 
 
 func _ready():
+	get_node("AudioStreamPlayer2D").connect("finished", self, "kill_gun")
 	# Kill the shotgun after a certain amount of time
 	get_tree().create_timer(life).connect("timeout", self, "kill_bullets")
-	get_node("AudioStreamPlayer2D").connect("finished", self, "kill_gun")
 
 
 # Passing the direction down to the projectiles
@@ -25,5 +25,5 @@ func kill_gun():
 # Runs when the ammo is out of life
 func kill_bullets():
 	for child in get_children():
-		if child is KinematicBody2D:
+		if child.name != "AudioStreamPlayer2D":
 			queue_free()
