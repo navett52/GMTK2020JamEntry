@@ -21,11 +21,15 @@ var default_tile = 0
 var default_time_step
 var timer = Timer
 var rand = RandomNumberGenerator.new()
+onready var audio
 
 # Resources
-var tile_set = load("res://Art/Tileset/Environment.tres")
+var tile_set = load("res://Art/Tileset/Walls.tres")
 var house = load("res://Room/Structures/House.tscn")
 var physics_object = load("res://Objects/Physics.tscn")
+
+var song1 = load("res://Songs/S-Sound 2.wav")
+var song2 = load("res://Songs/S-Sound3.wav")
 
 
 func _ready():
@@ -33,6 +37,7 @@ func _ready():
 	rand.randomize()
 	# Make sure to grab the default time step to not lose it
 	default_time_step = Engine.time_scale
+	audio = get_parent().get_node("AudioStreamPlayer2D")
 	# Generate the first room
 	generate_room()
 
@@ -105,6 +110,10 @@ func generate_room():
 	fill(5, 5)
 	tile_map.update_bitmask_region()
 	get_enemy_count()
+	if (rand.randf() < .5):
+		audio.stream = song1
+	else:
+		audio.stream = song2
 
 
 # Outline the room with tiles so the player is constrained
@@ -113,46 +122,52 @@ func outline():
 	for i in range(room_size.y):
 		tile_map.set_cell(0, i, default_tile)
 		# Check to see if we should make an outcropping
-		if (randf() < .3):
-			generate_outcrop(Vector2(0, i), rand.randi_range(1, 5))
+#		if (randf() < .3):
+#			generate_outcrop(Vector2(0, i), rand.randi_range(1, 5))
 	
 	# Make right side
 	for i in range(room_size.y):
 		tile_map.set_cell(room_size.x, i, default_tile)
-		if (randf() < .3):
-			generate_outcrop(Vector2(room_size.x, i), rand.randi_range(1, 5))
+#		if (randf() < .3):
+#			generate_outcrop(Vector2(room_size.x, i), rand.randi_range(1, 5))
 	
 	# Make top
 	for i in range(room_size.x):
 		tile_map.set_cell(i, 0, default_tile)
-		if (randf() < .3):
-			generate_outcrop(Vector2(i, 0), rand.randi_range(1, 5))
+#		if (randf() < .3):
+#			generate_outcrop(Vector2(i, 0), rand.randi_range(1, 5))
 	
 	# Make bottom
 	for i in range(room_size.x):
 		tile_map.set_cell(i, room_size.y - 1, default_tile)
-		if (randf() < .3):
-			generate_outcrop(Vector2(i, room_size.y -1), rand.randi_range(1, 5))
+#		if (randf() < .3):
+#			generate_outcrop(Vector2(i, room_size.y -1), rand.randi_range(1, 5))
 
 
 # Fill the room with exciting things like obstacles and enemies
 # Need to add enemies to this loop, as well as some collision checking
 func fill(x_step, y_step):
-		for x in range(room_size.x):
-			for y in range(room_size.y):
-				if (randf() < .003):
-					var obstacle = house.instance()
-					obstacle.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
-					add_child(obstacle)
-				
-				if (type == room_type.PHYSICS):
-					if (randf() < .005):
-						var object = physics_object.instance()
-						object.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
-						add_child(object)
-				
-				y += y_step
-			x += x_step
+	# Filling the ground with ground tiles
+	for x in range(1, room_size.x):
+		for y in range(1, room_size.y):
+			tile_map.set_cell(x, y, default_tile)
+	
+#	# Spawning enemies
+#	for x in range(room_size.x):
+#		for y in range(room_size.y):
+#			if (randf() < .003):
+#				var obstacle = house.instance()
+#				obstacle.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+#				add_child(obstacle)
+#
+#			if (type == room_type.PHYSICS):
+#				if (randf() < .005):
+#					var object = physics_object.instance()
+#					object.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+#					add_child(object)
+#
+#			y += y_step
+#		x += x_step
 
 
 # Generate an outcrop from the wall
