@@ -1,6 +1,5 @@
 extends KinematicBody2D
 
-
 # Exported variables
 export (int) var speed = 250
 export (int) var health = 100
