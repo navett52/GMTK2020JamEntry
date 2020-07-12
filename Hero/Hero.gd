@@ -14,6 +14,7 @@ var gun = Node
 var anim = "down"
 
 func _ready():
+	G.hero = self
 	# Grab a reference to the gun
 	gun = get_node("Gun")
 	health_label.text = str(health)
