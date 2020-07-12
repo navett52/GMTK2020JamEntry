@@ -14,7 +14,7 @@ func _ready():
 
 func _process(delta):
 	#if the player is in line of sight
-	if(is_in_line_of_sight(player)):
+	if(is_in_line_of_sight(player) && !waiting):
 		if player.position.x > position.x:
 			velocity.x += speed
 		if player.position.x < position.x:
