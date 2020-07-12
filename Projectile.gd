@@ -11,7 +11,9 @@ func _physics_process(delta):
 	# Some work to apply damage to enemies may need to go here
 	var collision = move_and_collide(velocity)
 	if (collision != null):
-		queue_free()
+		if(collision.collider.has_method("take_damage")):
+			collision.collider.take_damage(40)
+			queue_free()
 
 
 # Uses the passed direction to create a proper velocity

@@ -1,7 +1,8 @@
 extends KinematicBody2D
 
 onready var player = get_parent().get_node("Hero")
-var speed = 175
+export var speed = 175
+export var health = 40
 var velocity = Vector2()
 
 # Called when the node enters the scene tree for the first time.
@@ -29,6 +30,15 @@ func _physics_process(delta):
 	#normalizes the velocity vector, and then sets it to the declared speed
 	velocity = velocity.normalized() * speed
 	move_and_slide(velocity)
+	
+	for i in get_node("Area2D").get_overlapping_bodies():
+		if(i.get_name() == "Hero"):
+			i.take_damage(10)
+
+func take_damage(damage):
+	health -= damage
+	if(health <= 0):
+		queue_free()
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol
