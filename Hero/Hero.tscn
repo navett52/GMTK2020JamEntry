@@ -8,7 +8,7 @@
 [ext_resource path="res://Hero/KinematicBody2D.gd" type="Script" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 16, 16 )
+extents = Vector2( 8, 8 )
 
 [sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
@@ -42,6 +42,7 @@ extents = Vector2( 7.75847, 32.3963 )
 extents = Vector2( 14.7512, 15.7538 )
 
 [node name="Hero" type="KinematicBody2D"]
+collision_mask = 3
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -79,6 +80,7 @@ one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+<<<<<<< HEAD
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 collision_layer = 3
@@ -94,3 +96,6 @@ shape = SubResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 6 )
 [connection signal="timeout" from="Gun2/Timer" to="Gun2" method="_on_Timer_timeout"]
+=======
+zoom = Vector2( 0.5, 0.5 )
+>>>>>>> 7797a7560574177d6bed7953c416f09eaafd9f80

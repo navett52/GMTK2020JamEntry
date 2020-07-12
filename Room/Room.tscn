@@ -7,6 +7,7 @@
 script = ExtResource( 2 )
 
 [node name="TileMap" type="TileMap" parent="."]
+modulate = Color( 0.984314, 0.447059, 0.0156863, 1 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 32, 32 )
 collision_layer = 3
