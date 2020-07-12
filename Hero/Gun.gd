@@ -17,11 +17,11 @@ func _process(delta):
 # Needs some work still to randomly assign the different types of ammo
 func shoot():
 	var mouse_direction = (get_global_mouse_position() - self.global_position).normalized()
-	# var bullet = Shotgun.instance()
+	var bullet = Shotgun.instance()
 	# var bullet = WaterPistol.instance()
 	# var bullet = IceRifle.instance()
 	# var bullet = FlameRifle.instance()
-	var bullet = BigAssExplosion.instance()
+	# var bullet = BigAssExplosion.instance()
 	bullet.global_position = global_position
 	# Below is some weird math I had to do to get the bullets to spawn in the right direction
 	bullet.rotation = -atan2(mouse_direction.x, mouse_direction.y) + (PI/2)

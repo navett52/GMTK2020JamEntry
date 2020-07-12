@@ -5,7 +5,7 @@
 [ext_resource path="res://Hero/Gun.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 16, 16 )
+extents = Vector2( 15.3281, 15.5996 )
 
 [node name="Hero" type="KinematicBody2D"]
 collision_mask = 3

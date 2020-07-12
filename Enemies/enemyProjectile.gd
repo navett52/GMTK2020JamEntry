@@ -12,7 +12,8 @@ func _physics_process(delta):
 	var collision = move_and_collide(velocity)
 	#if(collision.collider.name != "BigEnemy" && collision.collider.name != "SmallEnemy"):
 	if(collision != null):
-		if(collision.collider.name != "BigEnemy"):
+		if(collision.collider.name == "Hero"):
+			collision.collider.take_damage(7)
 			queue_free()
 
 

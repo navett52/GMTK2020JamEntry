@@ -3,6 +3,7 @@ extends KinematicBody2D
 onready var player = get_parent().get_node("Hero")
 export var speed = 175
 export var dash_speed = 500
+export var health = 100
 
 var bullet = preload("res://Enemies/enemyProjectile.tscn")
 var normal_dir = Vector2(0,1)
@@ -61,6 +62,10 @@ func _physics_process(delta):
 			waiting = false
 			dashing = false
 			timer = 0
+	
+	for i in get_node("Area2D2").get_overlapping_bodies():
+		if(i.get_name() == "Hero"):
+			i.take_damage(15)
 
 func dash():
 	dashing = true
@@ -70,7 +75,7 @@ func AOE():
 	get_tree().create_timer(0.5).connect("timeout", self, "hideSplo")
 	for i in get_node("Area2D").get_overlapping_bodies():
 		if(i.get_name() == "Hero"):
-			speed = 175
+			i.take_damage(10)
 
 func showSplo():
 	get_node("splosion").visible = true
@@ -129,6 +134,12 @@ func select_state():
 	state = states[randi()%3]
 	print(state)
 	get_tree().create_timer(5).connect("timeout", self, "select_state")
+
+func take_damage(damage):
+	health -= damage
+	
+	if(health >= 0):
+		queue_free()
 
 #checks to see if our enemy has line of sight with the player
 #Pulled this from the internet, not entirely sure how it works lol

@@ -7,6 +7,7 @@ export (int) var health = 100
 # Private variables
 var direction = Vector2()
 var velocity = Vector2()
+var damage_taken = false
 var gun = Node
 
 
@@ -25,6 +26,17 @@ func _process(delta):
 	if (Input.is_action_just_pressed("activate_passive")):
 		print("Passive activated!")
 
+func take_damage(damage):
+	if(!damage_taken):
+		health -= damage
+		damage_taken = true
+		get_tree().create_timer(1).connect("timeout", self, "make_vulnerable")
+		print(health)
+		if(health <= 0):
+			get_tree().change_scene("res://Menu.tscn")
+
+func make_vulnerable():
+	damage_taken = false
 
 # Simple movement code. Works pretty well, actually.
 func _physics_process(delta):
