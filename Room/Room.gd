@@ -14,7 +14,7 @@ export (Vector2) var room_size = Vector2(42, 42)
 export (room_type) var type = room_type.NORMAL
 
 # Private variables
-var enemy_count = 1
+var enemy_count = 0
 var rooms_completed = 0
 var tile_map = TileMap
 var default_tile = 0
@@ -55,7 +55,6 @@ func _process(delta):
 			room_type.NORMAL:
 				print("Normal")
 				generate_room()
-				tile_map.modulate = Color(251, 114, 4, 255)
 
 
 func get_enemy_count():
@@ -63,16 +62,17 @@ func get_enemy_count():
 		if child.has_method("freeze"):
 			enemy_count += 1
 			child.connect("died", self, "update_enemy_count")
+	print(enemy_count)
 
 
 func update_enemy_count():
 	enemy_count -= 1
+	print(enemy_count)
 
 
 func generate_physics_room():
 	# The code for adding the physics objects lies in the fill() method
 	generate_room()
-	tile_map.modulate = Color(0, 0, 0, 255)
 
 
 func generate_time_room():
@@ -82,7 +82,6 @@ func generate_time_room():
 	timer.autostart = true
 	timer.connect("timeout", self, "time_behavior")
 	add_child(timer)
-	tile_map.modulate = Color(10, 95, 229, 255)
 
 
 #func generate_shape_room():
