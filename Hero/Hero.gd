@@ -11,7 +11,7 @@ var direction = Vector2()
 var velocity = Vector2()
 var damage_taken = false
 var gun = Node
-
+var anim = "down"
 
 func _ready():
 	# Grab a reference to the gun
@@ -47,16 +47,29 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity)
 
 
+
 # Get input and determine direction
 func get_input():
 	velocity = Vector2()
 	direction = Vector2()
 	if Input.is_action_pressed("move_right"):
 		direction.x += 1
+		anim = "left"
+		$Sprite.flip_h = true
 	if Input.is_action_pressed("move_left"):
 		direction.x -= 1
+		anim = "left"
+		$Sprite.flip_h = false
 	if Input.is_action_pressed("move_down"):
 		direction.y += 1
+		anim = "down"
+		$Sprite.flip_h = false
 	if Input.is_action_pressed("move_up"):
 		direction.y -= 1
+		anim = "up"
+		$Sprite.flip_h = false
+	if(direction.x == 0 && direction.y == 0):
+		$Sprite.stop()
+	else:
+		$Sprite.play(anim)
 	velocity = direction.normalized() * speed
