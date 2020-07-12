@@ -238,18 +238,10 @@ z_index = 5
 collision_mask = 3
 script = ExtResource( 2 )
 
-<<<<<<< Updated upstream
 [node name="HUD" parent="." instance=ExtResource( 4 )]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-=======
-[node name="Sprite" type="AnimatedSprite" parent="."]
-position = Vector2( 1.42733, -0.382998 )
-scale = Vector2( 0.473706, 0.581583 )
-frames = SubResource( 41 )
-animation = "walk_down"
->>>>>>> Stashed changes
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 1.38516, -0.040554 )
