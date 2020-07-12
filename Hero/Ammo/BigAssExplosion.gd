@@ -17,8 +17,8 @@ func kill():
 	var nodes = G.main_node.get_children()
 	
 	for i in nodes:
-		if(i is KinematicBody2D && i.name != "Hero"):
-			i.queue_free()
+		if(i.has_method("take_damage") && i.name != "Hero"):
+			i.take_damage(999)
 
 # Passing the direction down to the projectiles
 func initialize(direction):
