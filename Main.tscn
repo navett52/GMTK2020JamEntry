@@ -13,6 +13,10 @@ script = ExtResource( 2 )
 [node name="Hero" parent="." instance=ExtResource( 1 )]
 position = Vector2( 427, 243 )
 
+[node name="Sprite" parent="Hero" index="1"]
+frame = 4
+playing = false
+
 [node name="Room" parent="." instance=ExtResource( 4 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
