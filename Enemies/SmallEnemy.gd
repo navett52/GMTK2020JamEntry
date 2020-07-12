@@ -35,8 +35,17 @@ func _physics_process(delta):
 func is_in_line_of_sight(thing):
 	var space = get_world_2d().direct_space_state
 	if thing != null:
+		
+		var parent = self.get_parent()
+		var nodes = parent.get_children()
+		var exclusions = [self]
+		
+		for i in nodes:
+			if i.has_method("is_in_line_of_sight"):
+				exclusions.append(i)
+		
 		var line_of_sight_obstacle = space.intersect_ray(global_position, 
-				thing.global_position, [self], collision_mask)
+				thing.global_position, exclusions, collision_mask)
 		
 		if line_of_sight_obstacle.collider == thing:
 			return true
