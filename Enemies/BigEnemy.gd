@@ -177,7 +177,7 @@ func is_in_line_of_sight(thing):
 		var line_of_sight_obstacle = space.intersect_ray(global_position,
 				thing.global_position, exclusions, collision_mask)
 
-		if line_of_sight_obstacle is not Dictionary:
+		if !line_of_sight_obstacle.empty():
 			if line_of_sight_obstacle.collider == thing:
 				return true
 			else:
