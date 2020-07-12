@@ -12,14 +12,24 @@ enum ammo {
 
 var rand = RandomNumberGenerator.new()
 var direction = Vector2()
+var bullet_count = 0
+var bullet_type
+var bullet
+
 var Shotgun = load("res://Hero/Ammo/Shotgun.tscn")
 var WaterPistol = load("res://Hero/Ammo/WaterPistol.tscn")
 var IceRifle = load("res://Hero/Ammo/IceRifle.tscn")
 var FlameRifle = load("res://Hero/Ammo/FlameRifle.tscn")
 var BigAssExplosion = load("res://Hero/Ammo/BigAssExplosion.tscn")
-var bullet_count = 0
-var bullet_type
-var bullet
+
+var WaterPistolIcon = load("res://Art/UI/water_pistol_ammo.png")
+var ShotgunIcon = load("res://Art/UI/shotgun_ammo.png")
+var IceRifleIcon = load("res://Art/UI/icegun_ammo.png")
+var FlameRifleIcon = load("res://Art/UI/firegun_ammo.png")
+var BigAssExplosionIcon = load("res://Art/UI/big_explosion_ammo.png")
+
+var icon
+var ammo_count_label
 
 var ammo_weights = {
 	ammo.WATER_PISTOL: 5,
@@ -56,6 +66,7 @@ func shoot():
 	bullet.rotation = -atan2(mouse_direction.x, mouse_direction.y) + (PI/2)
 	G.main_node.call_deferred("add_child", bullet)
 	bullet_count -= 1
+	ammo_count_label.text = str(bullet_count)
 
 
 func instance_bullet(bullet_type):
@@ -77,18 +88,28 @@ func instance_bullet_with_count(bullet_type):
 			ammo.WATER_PISTOL:
 				bullet = WaterPistol.instance()
 				bullet_count = rand.randi_range(12, 20)
+				icon.texture = WaterPistolIcon
+				ammo_count_label.text = str(bullet_count)
 			ammo.SHOTGUN:
 				bullet = Shotgun.instance()
 				bullet_count = rand.randi_range(6, 12)
+				icon.texture = ShotgunIcon
+				ammo_count_label.text = str(bullet_count)
 			ammo.ICE_RIFLE:
 				bullet = IceRifle.instance()
 				bullet_count = rand.randi_range(8, 14)
+				icon.texture = IceRifleIcon
+				ammo_count_label.text = str(bullet_count)
 			ammo.FLAME_RIFLE:
 				bullet = FlameRifle.instance()
 				bullet_count = rand.randi_range(8, 14)
+				icon.texture = FlameRifleIcon
+				ammo_count_label.text = str(bullet_count)
 			ammo.BIG_ASS_EXPLOSION:
 				bullet = BigAssExplosion.instance()
 				bullet_count = 1
+				icon.texture = BigAssExplosionIcon
+				ammo_count_label.text = str(bullet_count)
 
 
 func choose_ammo():
