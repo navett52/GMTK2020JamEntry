@@ -64,5 +64,9 @@ __meta__ = {
 stream = ExtResource( 7 )
 autoplay = true
 script = ExtResource( 8 )
+
+[node name="ButtSounds" type="AudioStreamPlayer2D" parent="."]
+[connection signal="mouse_entered" from="Button" to="Button" method="_on_Button_mouse_entered"]
 [connection signal="pressed" from="Button" to="Button" method="_on_Button_pressed"]
+[connection signal="mouse_entered" from="Button2" to="Button2" method="_on_Button2_mouse_entered"]
 [connection signal="pressed" from="Button2" to="Button2" method="_on_Button2_pressed"]

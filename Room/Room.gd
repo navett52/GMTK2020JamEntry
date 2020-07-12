@@ -15,6 +15,7 @@ export (room_type) var type = room_type.NORMAL
 
 # Private variables
 var player
+var room_count = 0
 var enemy_count = 0
 var rooms_completed = 0
 var tile_map = TileMap
@@ -34,6 +35,10 @@ var song2 = load("res://Songs/S-Sound3.wav")
 var SmallEnemy = load("res://Enemies/SmallEnemy.tscn")
 var BigEnemy = load("res://Enemies/BigEnemy.tscn")
 
+var House = load("res://Room/Structures/House.tscn")
+
+var menu = load("res://Menu.tscn")
+
 
 func _ready():
 	player = G.hero
@@ -44,6 +49,7 @@ func _ready():
 	audio = get_parent().get_node("AudioStreamPlayer2D")
 	# Generate the first room
 	generate_room()
+	room_count = 0
 
 
 func _process(delta):
@@ -104,6 +110,8 @@ func time_behavior():
 
 # High level method to generate the room
 func generate_room():
+	if room_count >= 9:
+		get_tree().change_scene_to(menu)
 	reset()
 	room_size = Vector2(rand.randi_range(30, 45), rand.randi_range(30, 45))
 	tile_map = TileMap.new()
@@ -121,6 +129,7 @@ func generate_room():
 		audio.stream = song2
 		audio.playing = true
 	player.global_position = Vector2(200, 200)
+	room_count += 1
 
 
 # Outline the room with tiles so the player is constrained
@@ -166,7 +175,12 @@ func fill(x_step, y_step):
 				var small = SmallEnemy.instance()
 				small.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
 				get_parent().add_child(small)
-
+			
+			if (randf() < .0015):
+				var house = House.instance()
+				house.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
+				get_parent().add_child(house)
+			
 			if (randf() < .002):
 				var big = BigEnemy.instance()
 				big.global_position = Vector2(x * tile_map.cell_size.x, y * tile_map.cell_size.y)
