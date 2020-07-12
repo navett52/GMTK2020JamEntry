@@ -120,7 +120,7 @@ func generate_room():
 	else:
 		audio.stream = song2
 		audio.playing = true
-	player.global_position = Vector2(500, 500)
+	player.global_position = Vector2(200, 200)
 
 
 # Outline the room with tiles so the player is constrained
