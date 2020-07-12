@@ -11,6 +11,9 @@ var direction = Vector2()
 var velocity = Vector2()
 var damage_taken = false
 var gun = Node
+var sprite = AnimatedSprite
+var anim = "walk-down"
+var flip = false
 
 
 func _ready():
@@ -53,10 +56,22 @@ func get_input():
 	direction = Vector2()
 	if Input.is_action_pressed("move_right"):
 		direction.x += 1
+		anim = "walk_left"
+		$Sprite.flip_h = true
 	if Input.is_action_pressed("move_left"):
 		direction.x -= 1
+		anim = "walk_left"
+		$Sprite.flip_h = false
 	if Input.is_action_pressed("move_down"):
 		direction.y += 1
+		anim = "walk_down"
+		$Sprite.flip_h = false
 	if Input.is_action_pressed("move_up"):
 		direction.y -= 1
+		anim = "walk_up"
+		$Sprite.flip_h = false
+	if(direction.x == 0 && direction.y == 0):
+		$Sprite.stop()
+	else:
+		$Sprite.play(anim)
 	velocity = direction.normalized() * speed
