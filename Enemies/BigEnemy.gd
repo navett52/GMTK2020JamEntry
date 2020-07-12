@@ -30,24 +30,36 @@ func _process(delta):
 	if(is_in_line_of_sight(player)):
 		if player.position.x > position.x:
 			velocity.x += speed
-			anim = "left"
-			$Sprite.flip_h = true
 		if player.position.x < position.x:
 			velocity.x -= speed
-			anim = "left"
-			$Sprite.flip_h = false
 		if player.position.y > position.y:
 			velocity.y += speed
-			anim = "up"
-			$Sprite.flip_h = false
 		if player.position.y < position.y:
 			velocity.y -= speed
-			anim = "down"
-			$Sprite.flip_h = false
 	else:
 		# if can't see player, don't move
 		velocity.x = 0
 		velocity.y = 0
+	
+		var angle = get_aim_angle()
+		if(45 <= angle && angle <= 135):
+			anim = "left"
+			$Sprite.flip_h = false
+		elif(135 < angle && angle <= 180):
+			anim = "up"
+			$Sprite.flip_h = false
+		elif(-180 < angle && angle < -135):
+			anim = "up"
+			$Sprite.flip_h = false
+		elif(-135 <= angle && angle <= -45):
+			anim = "left"
+			$Sprite.flip_h = true
+		elif(-45 < angle && angle <= 0):
+			anim = "down"
+			$Sprite.flip_h = false
+		elif(0 < angle && angle < 45):
+			anim = "down"
+			$Sprite.flip_h = false
 
 
 func _physics_process(delta):
@@ -106,6 +118,7 @@ func _physics_process(delta):
 
 func dash():
 	dashing = true
+	$Dash.play()
 
 func AOE():
 	showSplo()
@@ -116,6 +129,7 @@ func AOE():
 
 func showSplo():
 	get_node("splosion").visible = true
+	$AOE.play()
 
 func hideSplo():
 	get_node("splosion").visible = false
@@ -139,7 +153,8 @@ func shoot():
 			clone.global_position.y += 27
 		elif(0 < angle && angle < 45):
 			clone.global_position.y += 27
-
+		
+		$Shoot.play()
 		clone.initialize((player.get_position()-self.get_position()).normalized())
 		waiting = false
 
